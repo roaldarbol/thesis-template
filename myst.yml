@@ -1,7 +1,7 @@
 # See docs at: https://mystmd.org/guide/frontmatter
 version: 1
 project:
-  id: 98639202-2740-46df-bbdf-48c6b1a3738d
+  # id: 98639202-2740-46df-bbdf-48c6b1a3738d
   title: PhD Thesis
   # description:
   keywords: []

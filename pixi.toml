@@ -12,7 +12,4 @@ render-myst = "myst build --typst"
 
 [dependencies]
 typst = ">=0.11.0,<0.12"
-mystmd = ">=1.1.56,<1.2"
-
-[pypi-dependencies]
-jtex = "*"
+mystmd = ">=1.2.0,<1.3"

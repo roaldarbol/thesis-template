@@ -13,7 +13,7 @@
 
 #let template(
   frontmatter: (),
-  heading-numbering: "1.1.1",
+  // heading-numbering: "1.1.1",
   // A color for the theme of the document
   theme: blue.darken(30%),
   // The thesis' content.
@@ -78,13 +78,13 @@
 
   // Outline of book
   pagebreak()
-  show outline.entry.where(level: 1): it => {
+  show outline.entry.where(level: 1): (it) => {
     v(12pt, weak: true)
     strong(it)
   }
   outline(indent: auto)
 
-  
+
   show heading.where(level: 1): (it) => {
     pagebreak()
     let chapter = counter(heading).display((..nums) => nums.pos().at(0))
