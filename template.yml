@@ -1,25 +1,28 @@
 myst: v1
 kind: typst
-title: SciPy Template
-description: SciPy Conference Proceedings Template
-template: template.typ
+title: Thesis Template
+description: Typst-MyST Thesis Template
+template: typst-thesis.typ
 files:
   - template.typ
-  - scipy.typ
+  - typst-thesis.typ
   - logo.svg
 authors:
   - name: Rowan Cockett
     github: rowanc1
     affiliations:
       - Curvenote
+  - name: Mikkel Roald-Arbøl
+    github: roaldarbol
+    affiliations:
+      - University of Sussex
 version: 0.0.1
 license: MIT
 tags:
-  - preprint
-  - article
-  - paper
+  - thesis
+  - book
 thumbnail: ./thumbnail.png
-github: https://github.com/myst-templates/scipy
+github: https://github.com/myst-templates/typst-thesis
 doc:
   - id: title
     required: true
@@ -39,5 +42,10 @@ parts:
   - id: abstract
     description: >
       An abstract is a short summary of your research paper or report.
+    max_words: 500
+    required: true
+  - id: declaration
+    description: >
+      Declaration that you did the work!
     max_words: 500
     required: true

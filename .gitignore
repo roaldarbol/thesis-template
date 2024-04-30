@@ -1,2 +1,7 @@
 scipy.pdf
 template.pdf
+# pixi environments
+.pixi
+*.egg-info
+_build
+

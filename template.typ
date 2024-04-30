@@ -1,4 +1,4 @@
-#import "scipy.typ": *
+#import "typst-thesis.typ": *
 
 [-IMPORTS-]
 

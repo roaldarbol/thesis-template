@@ -1,0 +1,32 @@
+# Table of Contents
+#
+# Myst will respect:
+# 1. New pages
+#      - file: relative/path/to/page
+# 2. New sections without an associated page
+#      - title: Folder Title
+#        sections: ...
+# 3. New sections with an associated page
+#      - file: relative/path/to/page
+#        sections: ...
+#
+# Note: Titles defined on pages here are not recognized.
+#
+# This spec is based on the JupyterBook table of contents.
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: 00-Front-Matter/00-Front-Page
+chapters:
+  - title: Front Matter
+    sections:
+      - file: 00-Front-Matter/01-Declaration
+      - file: 00-Front-Matter/02-Abstract
+      - file: 00-Front-Matter/03-Preface
+      - file: 00-Front-Matter/04-Acknowledgements
+      - file: 00-Front-Matter/05-Dedication
+      - file: 00-Front-Matter/06-Glossary
+  - title: Chapters
+    sections:
+      - file: 01-Chapters/01-Introduction
+      - file: 01-Chapters/02-Chapter

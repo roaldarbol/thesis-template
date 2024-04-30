@@ -1,178 +1,9 @@
-// Created with jtex v.1.0.12
-#import "../../scipy.typ": *
-#show: template.with(
-  frontmatter: (
-    title: "vak: a neural network framework for researchers studying animal acoustic communication",
-    abstract: [
-How is speech like birdsong? What do we mean when we say an animal learns their vocalizations?
-Questions like these are answered by studying how animals communicate with sound.
-As in many other fields, the study of acoustic communication is being revolutionized by deep neural network models.
-These models enable answering questions that were previously impossible to address,
-in part because the models automate analysis of very large datasets. Acoustic communication researchers
-have developed multiple models for similar tasks, often implemented as research code with one of several libraries,
-such as Keras and Pytorch. This situation has created a real need for a framework
-that allows researchers to easily benchmark multiple models,
-and test new models, with their own data. To address this need, we developed vak (#link("https://github.com/vocalpy/vak")[https://github.com/vocalpy/vak]),
-a neural network framework designed for acoustic communication researchers.
-("vak" is pronounced like "talk" or "squawk" and was chosen
-for its similarity to the Latin root _voc_, as in "vocal".)
-Here we describe the design of the vak,
-and explain how the framework makes it easy for researchers to apply neural network models to their own data.
-We highlight enhancements made in version 1.0 that significantly improve user experience with the library.
-To provide researchers without expertise in deep learning access to these models,
-vak can be run via a command-line interface that uses configuration files.
-Vak can also be used directly in scripts by scientist-coders. To achieve this, vak adapts design patterns and
-an API from other domain-specific PyTorch libraries such as torchvision, with modules representing
-neural network operations, models, datasets, and transformations for pre- and post-processing.
-vak also leverages the Lightning library as a backend,
-so that vak developers and users can focus on the domain.
-We provide proof-of-concept results showing how vak can be used to
-test new models and compare existing models from multiple model families.
-In closing we discuss our roadmap for development and vision for the community of users.
-    ],
-    date: datetime(
-      year: 2023,
-      month: 7,
-      day: 10,
-    ),
-    open-access: true,
-    license: "CC-BY-4.0",
-    keywords: ("animal acoustic communication","bioacoustics","neural networks",),
-    doi: "10.25080/gerudo-f2bc6f59-008",
-    authors: (
-      (
-        name: "David Nicholson",
-        orcid: "0000-0002-4261-4719",
-        affiliations: "1",
-        email: "nicholdav@gmail.com"
-      ),
-      (
-        name: "Yarden Cohen",
-        orcid: "0000-0002-8149-6954",
-        affiliations: "2",
-      ),
-    ),
-    github: "https://github.com/vocalpy/vak",
-    affiliations: (
-      (
-        id: "1",
-        name: "Independent researcher, Baltimore, Maryland, USA",
-      ),
-      (
-        id: "2",
-        name: "Weizmann Institute of Science, Rehovot, Israel",
-      ),
-    ),
-  )
-)
-
-/* Written by MyST v1.1.37 */
-
-#set page(columns: 2, margin: (x: 1.5cm, y: 2cm),)
-
-= Introduction <introduction>
-
-Are humans unique among animals? We seem to be the only species that speaks languages @hauserFacultyLanguageWhat2002,
-but is speech somehow like other forms of acoustic communication in other animals,
-such as birdsong @doupeBIRDSONGHUMANSPEECH1999?
-How should we even understand the ability of some animals to learn their vocalizations
-@wirthlinModularApproachVocal2019?
-Questions like these are answered by studying how animals communicate with sound @hopp2012animal.
-As others have argued, major advances in this research will require
-cutting edge computational methods and big team science across a wide range of disciplines,
-including ecology, ethology, bioacoustics, psychology, neuroscience, linguistics, and genomics
-@sainburgComputationalNeuroethologyVocal2021 @stowellComputationalBioacousticsDeep2022 @wirthlinModularApproachVocal2019 @hauserFacultyLanguageWhat2002.
-
-Research on animal acoustic communication is being revolutionized by
-deep learning algorithms @sainburgComputationalNeuroethologyVocal2021 @stowellComputationalBioacousticsDeep2022 @cohen2022recent.
-Deep neural network models enable answering questions that were previously impossible to address,
-in part because these models automate analysis of very large datasets.
-Within the study of animal acoustic communication, multiple models have been proposed
-for similar tasks--we review these briefly in the next section.
-These models have been implemented using a range of frameworks for neural networks,
-including PyTorch (as in @cohenAutomatedAnnotationBirdsong2022 and @goffinetLowdimensionalLearnedFeature2021),
-Keras and Tensorflow (as in @steinfathFastAccurateAnnotation2021 and @sainburgFindingVisualizingQuantifying2020),
-and even in programming environments outside Python such as Matlab (as in @coffeyDeepSqueakDeepLearningbased2019).
-Because of this, it is difficult for researchers to directly compare models,
-and to understand how each performs on their own data.
-Additionally, many researchers will want to experiment with their own models
-to better understand the fit between tasks defined by machine learning researchers and their own question of interest.
-All of these factors have created a real need for a framework that allows researchers to easily benchmark models
-and apply trained models to their own data.
-
-To address this need, we developed vak @nicholsonVak2022 (#link("https://github.com/vocalpy/vak")[https:\/\/github.com/vocalpy/vak]),
-a neural network framework designed for researchers studying animal acoustic communication.
-vak is already in use in at least 10-20 research groups to our knowledge,
-and has already been used in several publications, including
-@cohenAutomatedAnnotationBirdsong2022 @goffinetLowdimensionalLearnedFeature2021 @mcgregorSharedMechanismsAuditory2022 @provostImpactsFinetuningPhylogenetic2022.
-Here we describe the design of the vak framework, and explain how vak makes it easy
-for acoustic communication researchers to work with neural network models.
-We have also recently published an alpha release of version 1.0 of the library,
-and throughout this article we highlight enhancements made in this version
-that we believe will significantly improve user experience.
-
-== Related work <related-work>
-
-First, we briefly review related literature, to further motivate the need for a framework.
-A very common workflow in studies of acoustic behavior is to take audio recordings of one individual animal
-and segment them into a sequence of units, after which further analyses can be done,
-as reviewed in @kershenbaumAcousticSequencesNonhuman2016.
-Some analyses require further annotation of the units to assign them to one of some set of classes,
-e.g. the unique syllables within an individual songbird's song.
-An example of segmenting audio of Bengalese finch song into syllables and annotating those syllables is shown in
-@fig:annotation.
-
-#figure(
-  image("files/annotation-1b1adc5143bcb0c9c42624696eb7e262.png", width: 100%),
-  caption: [Schematic of analyzing acoustic behavior as a sequence of units.
-Top panel shows a spectrogram of an individual Bengalese finch's song,
-consisting of units, often called syllables, separated by brief silent gaps.
-Bottom panel illustrates one method for segmenting audio into syllables that are annotated:
-a threshold is set on the audio amplitude to segment it into syllables
-(a continuous period above the threshold), and then a human annotator labels each syllable
-(e.g., with a GUI application).
-Adapted from @cohenAutomatedAnnotationBirdsong2022
-under #link("https://creativecommons.org/licenses/by/4.0/")[CC BY 4.0 license].],
-  kind: "figure",
-  supplement: [Figure],
-) <fig:annotation>
-
-Several models have been developed to detect and classify a large dataset of vocalizations from an individual animal.
-These are all essentially supervised machine learning tasks. Some of these models seek to align a neural network task
-with the common workflow just described @kershenbaumAcousticSequencesNonhuman2016,
-where audio is segmented into a sequence of units
-with any of several methods @fukuzawaComputationalMethodsGeneralised2022,
-that are then labeled by a human annotator.
-The first family of neural network models reduces this workflow to a
-frame classification problem @graves_framewise_2005 @graves_supervised_2012.
-That is, these models classify a series of _frames_,
-like the columns in a spectrogram.
-Sequences of units (e.g., syllables of speech or birdsong) are recovered from this series of frame classifications with post-processing.
-Essentially, the post-processing finds the start and stop times of each continuous run of a single label.
-Multiple neural network models have been developed for this frame classification approach,
-including @cohenAutomatedAnnotationBirdsong2022 and @steinfathFastAccurateAnnotation.
-A separate approach from frame classification models has been to formulate recognition of individual vocalizations
-as an object detection problem. To our knowledge this has been mainly applied to mouse ultrasonic vocalizations
-as in @coffeyDeepSqueakDeepLearningbased2019.
-
-Another line of research has investigated the use of unsupervised models
-to learn a latent space of vocalizations. This includes the work of @sainburgFindingVisualizingQuantifying2020
-and @goffinetLowdimensionalLearnedFeature2021. These unsupervised neural network models allow for
-clustering vocalizations in the learned latent space, e.g., to efficiently provide a human annotator
-with an estimate of the number of classes of vocalizations
-in an animal's repertoire @sainburgFindingVisualizingQuantifying2020,
-and/or to measure similarity between vocalizations
-of two different animals @goffinetLowdimensionalLearnedFeature2021 @zandbergBirdSongComparison2022.
-It is apparent that unsupervised approaches are complementary to supervised models
-that automate labor-intensive human annotation. This is another reason that a single framework
-should provide access to both supervised and unsupervised models.
-
-= Methods <methods>
+== Methods <methods>
 
 In this section we describe the design of vak: its application programming interface (API)
 and its command-line interface (CLI). We begin by introducing the design of vak at the highest level.
 
-== Design <design>
+=== Design <design>
 
 vak relies on PyTorch @paszkeAutomaticDifferentiationPyTorch2017 for neural networks,
 because PyTorch accommodates Pythonic idioms and low-level control flow within networks when needed.
@@ -205,7 +36,7 @@ without requiring significant expertise in Python programming or deep learning.
 We first describe the API, so that key concepts have been introduced
 when we explain the usage of the CLI.
 
-== Models <models>
+=== Models <models>
 
 As its name implies, the `models` module is where implementations
 of neural network models are found.
@@ -220,7 +51,7 @@ we provide users with per-model implementations of methods for training, validat
 and even for forwarding a single batch or sample through the model.
 We briefly describe the abstractions we have developed to make it easier to work with models.
 
-== Abstractions for declaring a model in vak <abstractions-for-declaring-a-model-in-vak>
+=== Abstractions for declaring a model in vak <abstractions-for-declaring-a-model-in-vak>
 
 Our goal is to make it so that a scientist-coder is able to use any of the built-in models,
 and experiment with their own models, without needing to contribute code to vak
@@ -309,7 +140,7 @@ so that it can be found by other functions
 for training and evaluating models.
 The models that are built in to vak use the exact same decorator.
 
-== Model families <model-families>
+=== Model families <model-families>
 
 Having introduced the abstraction needed to declare models within the vak framework,
 we now describe the families we have implemented to date.
@@ -368,7 +199,7 @@ that can map spectrograms of units extracted from audio to a latent space.
 Our implementation is adapted from #link("https://github.com/elyxlz/umap_pytorch")[https:\/\/github.com/elyxlz/umap_pytorch]
 and #link("https://github.com/lmcinnes/umap/issues/580\#issuecomment-1368649550")[https:\/\/github.com/lmcinnes/umap/issues/580\#issuecomment-1368649550].
 
-== Neural network layers and operations <neural-network-layers-and-operations>
+=== Neural network layers and operations <neural-network-layers-and-operations>
 
 Like PyTorch, vak provides a module for neural network operations and layers named `nn`.
 This module contains layers used by more than one network.
@@ -380,7 +211,7 @@ for purposes of replicability.)
 Another example of an operation in `vak.nn` is a PyTorch implementation of the normalized ReLu activation
 used by @lea2017temporal with their ED-TCN model.
 
-== Transformations <transformations>
+=== Transformations <transformations>
 
 Like torchvision, vak provides a module for transformations of data
 that will become input to a neural network model or will be applied
@@ -456,7 +287,7 @@ where we want to measure just the segment error rate.
 when throwing away that information, but for some research questions the main goal is to simply
 have the correct labels for each segment.)
 
-== Metrics <metrics>
+=== Metrics <metrics>
 
 Vak additionally declares a `metrics` module
 for evaluation metrics that are specific to acoustic communication models.
@@ -472,7 +303,7 @@ we have additionally adopted as a dependency the
 `torchmetrics` library,
 that makes it easier to compute a wide array of metrics for models.
 
-== Datasets <datasets>
+=== Datasets <datasets>
 
 Lastly, vak provides a `dataset` module,
 again similar in spirit to the module of the same name in torchvision.
@@ -559,7 +390,7 @@ meaning that this single path will be repeated for every row in the csv.
 Logic in vak uses this fact to determine whether annotations can be loaded from a single file
 or must be loaded separately for each file when working with models.
 
-== Frame classification datasets <frame-classification-datasets>
+=== Frame classification datasets <frame-classification-datasets>
 
 There are two generalized dataset classes for frame classification models in vak.
 Both these classes can operate on a single dataset prepared
@@ -610,7 +441,7 @@ and then returning a `view` of the sample as a stack of those $w$ windows.
 Post-processing the output batch allows us to compute metrics on a per-sample basis,
 to answer questions such as "what is the average segment error rate per bout of vocalizations?".
 
-== Parametric UMAP datasets <parametric-umap-datasets>
+=== Parametric UMAP datasets <parametric-umap-datasets>
 
 For the parametric UMAP model,
 we provide a single dataset class, `ParametricUMAPDataset`.
@@ -620,7 +451,7 @@ The parameters of the dataset class
 configure the first step in the UMAP algorithm,
 that of building a graph on the dataset before embedding.
 
-== Command-line interface and configuration file <cli-config>
+=== Command-line interface and configuration file <cli-config>
 
 Having described the API, we now walk through vak's CLI.
 An example screenshot of a training run started from the command line is shown in Figure @fig:cli.
@@ -636,7 +467,7 @@ The configuration file follows the TOML format
 that has been adopted by the Python and Rust communities among others.
 
 #figure(
-  image("files/vak-cli-screenshot-85478f615f765dfaa6d83667f6897c9d.png", width: 100%),
+  image("../files/vak-cli-screenshot-85478f615f765dfaa6d83667f6897c9d.png", width: 100%),
   caption: [Screenshots of vak, demonstrating the command-line interface and logging.
 In top panel (a), an example is shown of using the command-line interface to train a model with a configuration file.
 In the bottom panel (b) an example is shown of how vak logs progress
@@ -670,7 +501,7 @@ Once any needed dataset is prepared,
 the user can run the command related to the model, using the same configuration file.
 
 #figure(
-  image("files/vak-workflow-chart-ebe8b99156eee4a7582c0a51ff19d822.png", width: 100%),
+  image("../files/vak-workflow-chart-ebe8b99156eee4a7582c0a51ff19d822.png", width: 100%),
   caption: [A chart showing workflows in vak, using an example a frame classification model
 as defined below. See text for description of workflows.],
   kind: "figure",
@@ -684,184 +515,3 @@ e.g., looking for evidence of high bias or high variance models.
 Instead, the learning curve functionality allows vak users to answer important practical questions for their research.
 Most importantly, what is the optimal performance that can be achieved
 with the minimum amount of labor-intensive, hand-annotated training data?
-
-= Results <results>
-
-In this section we present proof-of-concept results demonstrating the utility of our framework.
-The project that produced these results can be found at: #link("https://github.com/vocalpy/scipy-proceedings-2023-vak")[https:\/\/github.com/vocalpy/scipy-proceedings-2023-vak]
-
-== Ablation experiment <ablation-experiment>
-
-We first show how vak allows researchers to
-experiment with a model not built into the library.
-For this purpose, we carry out an "ablation experiment"
-as the term is used in the artificial neural network literature,
-where an operation is removed from a neural network function
-to show that operation plays an important role
-in the model's performance.
-Using a script, we define a version of the TweetyNet model in
-@cohenAutomatedAnnotationBirdsong2022 without the recurrent
-Long Short Term Memory (LSTM) layer (thus "ablating" it).
-This model without the LSTM makes a prediction for each frame
-using the output of the convolutional layers,
-instead of using the hidden state of the recurrent layer
-at each time step.
-If the hidden state contains features that are useful
-for predicting across time steps,
-we would expect that "ablating" (removing) it would impair performance.
-To show that removing the LSTM layer impairs performance,
-we compare with the full TweetyNet model (now built into vak).
-For all experiments, we prepared a single dataset
-and then trained both models on that same dataset.
-We specifically ran learning curves as described above,
-but here we consider only the performance using 10 minutes of data for training,
-because as we previously reported @cohenAutomatedAnnotationBirdsong2022
-this was the minimum amount of training data required
-to achieve the lowest error rates.
-As shown in the top row of Figure @fig:ablation-experiment,
-ablating the recurrent layer increased the frame error rate
-(left column, right group of bars), and this produced
-an inflated syllable error rate (right column, right group of bars).
-
-#figure(
-  image("files/ablation-experiment-9560f0c10c7b12654df0f99807c4f9f9.png", width: 100%),
-  caption: [Ablation experiment carried out by declaring a model in a script using the vak framework.
-Bar plots show frame error (left column) and syllable error rate (right column),
-without post-processing clean-up (blue bars) and with (orange bars).
-Within each axes, the grouped bars on the left indicate results from the TweetyNet
-model built into the vak library, and the grouped bars on the right indicate results from
-a model declared in a script where the recurrent LSTM layer has been removed ("ablated")
-from the TweetyNet architecture.
-In the top row, values are the average across models trained on data from four different
-Bengalese finches, with five training replicates per bird (see text for detail).
-In the bottom row, single models were trained to classify syllables
-from all four birds.],
-  kind: "figure",
-  supplement: [Figure],
-) <fig:ablation-experiment>
-
-This first result is the average across models trained on datasets
-prepared from individual birds in the Bengalese finch song repository dataset @nicholson_bengalese_2017,
-as we did previously in @cohenAutomatedAnnotationBirdsong2022.
-(There are four birds, and five training replicates per bird,
-where each replicate is trained on different subsets from a larger pool of training data.)
-Other studies using the same benchmark data repository
-have trained models on datasets prepared from all four birds
-@steinfathFastAccurateAnnotation2021 (so that the model predicts 37 classes,
-the syllables from all four birds, instead of 5-10 per bird).
-We provide this result for the TweetyNet model with and without LSTM
-in the bottom row of Figure @fig:ablation-experiment.
-It can be seen that asking the models to predict a greater number of classes
-further magnified the difference between them (as would be expected).
-TweetyNet without the LSTM layer
-has a syllable error rate greater than 230%.
-(Because the syllable error rate is an edit distance,
-it can be greater than 1.0. It is typically
-written as a percentage for readability of smaller values.)
-
-== Comparison of TweetyNet and ED-TCN <comparison-of-tweetynet-and-ed-tcn>
-
-We next show how vak allows researchers to compare models.
-For this we compare the TweetyNet model in @cohenAutomatedAnnotationBirdsong2022
-with the ED-TCN model of @lea2017temporal.
-As for the ablation experiment,
-we ran full learning curves,
-but here just focus on the performance of models trained on 10 minutes of data.
-Likewise, the grouped box plots are as in Figure @fig:ablation-experiment,
-with performance of TweetyNet again on the left and in this case the ED-TCN model
-on the right.
-Here we only show performance of models trained on data from all four birds
-(the same dataset we prepared for the ablation experiment above).
-We observed that on this dataset the ED-TCN had a higher frame error and syllable error rate,
-as shown in Figure @fig:tweetynet-v-edtcn.
-However, there was no clear difference when training models on individual birds
-(results not shown because of limited space).
-Our goal here is not to make any strong claim about either model,
-but simply to show that our framework makes it possible to more easily compare
-two models on the exact same dataset.
-
-#figure(
-  image("files/TweetyNet-v-EDTCN-60631050bd2d5abf681ce49ba8d23b67.png", width: 100%),
-  caption: [Comparison of TweetyNet model @cohenAutomatedAnnotationBirdsong2022
-with ED-TCN model.
-Plots are as in @fig:ablation-experiment.
-Each axes shows results for one individual bird from the
-Bengalese finch song repository dataset @nicholson_bengalese_2017.
-Bar plots show frame error (left column) and syllable error rate (right column),
-without post-processing clean-up (blue bars) and with (orange bars).],
-  kind: "figure",
-  supplement: [Figure],
-) <fig:tweetynet-v-edtcn>
-
-== Applying Parametric UMAP to Bengalese finch syllables with a convolutional encoder <applying-parametric-umap-to-bengalese-finch-syllables-with-a-convolutional-encoder>
-
-Finally we provide a result demonstrating that a researcher can apply multiple families of models
-to their data with our framework.
-As stated above, the vak framework includes an implementation of a Parametric UMAP family,
-and one model in this family, a simple encoder network with convolutional layers on the front end.
-To demonstrate this model, we train it on the song of an individual bird from
-the Bengalese finch song repository.
-We use a training set with a duration of 40 seconds total, containing clips of
-all syllable classes from the bird's song, taken from songs that were drawn at random
-from a larger data pool by the vak dataset preparation function.
-We then embed a separate test set.
-It can be seen in Figure @fig:parametric-umap that points that are close to each other
-are almost always the same color, indicating that syllables that were given the same label
-by a human annotator are also nearer to each other after mapping to 2-D space
-with the trained parametric UMAP model.
-
-#figure(
-  image("files/parametric-umap-e87627c6cc9ccd35e1a5427cb34667a4.png", width: 100%),
-  caption: [Scatter plot showing syllables from the song of one Bengalese finch,
-embeeded in a 2-D space using a convolutional encoder
-trained using the Parametric UMAP algorithm.
-Each marker is a point produced from a spectrograms
-of a single syllable rendition, mapped down to the 2-D space,
-from 40 seconds of training data.
-Colors indicate the label applied to each syllable
-by an expert human when annotating the spectrograms
-with a GUI.],
-  kind: "figure",
-  supplement: [Figure],
-) <fig:parametric-umap>
-
-= Discussion <discussion>
-
-Researchers studying acoustic behavior need to benchmark multiple
-neural network models on their data,
-evaluate training performance for different training set sizes,
-and use trained models to make predictions on newly acquired data.
-Here we presented vak, a neural network framework developed to meet these needs.
-In the Methods we described its design and development.
-Then in the Results we provide proof-of-concept results demonstrating
-how researchers can easily use our framework.
-
-Finally, we summarize the roadmap for further development of version 1.0 of vak.
-In the spirit of taking an open approach,
-we are tracking issues related to this roadmap on GitHub:
-#link("https://github.com/vocalpy/vak/issues/614")[https:\/\/github.com/vocalpy/vak/issues/614].
-A key goal will be to add benchmark datasets,
-generated by running the vak prep command,
-that a user can download and use
-to benchmark models with publicly shared configuration files.
-Another key goal will be to add models that are pre-trained on these benchmark datasets.
-Additionally we plan to refactor the prep module
-to make use of the vocalpy package @nicholson_vocalpyvocalpy_2023,
-developed to make acoustic communication research code
-in Python more concise and readable.
-Another key step will be inclusion of additional models
-like those reviewed in the Related Work.
-Along with this expansion of existing functionality,
-the final release of version 1.0 will include several quality-of-life
-improvements, including a revised schema for the configuration file format
-that better leverages the strengths of TOML,
-and dataclasses that represent outputs of vak,
-such as dataset directories and results directories,
-to make it easier to work with outputs programmatically.
-It is our hope that these conveniences
-plus the expanded models and datasets
-will provide a framework that
-can be developed collaboratively by the entire
-research community studying acoustic communication in animals.
-
-#bibliography("main.bib")

@@ -1,0 +1,17 @@
+[project]
+name = "thesis-template"
+version = "0.1.0"
+description = "Add a short description here"
+authors = ["Mikkel Roald-Arbøl <github.ggb9a@simplelogin.co>"]
+channels = ["conda-forge"]
+platforms = ["osx-64"]
+
+[tasks]
+render = "typst compile examples/examploe-typst/main.typ --root ../.."
+
+[dependencies]
+typst = ">=0.11.0,<0.12"
+mystmd = ">=1.1.56,<1.2"
+
+[pypi-dependencies]
+jtex = "*"

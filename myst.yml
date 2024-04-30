@@ -1,0 +1,32 @@
+# See docs at: https://mystmd.org/guide/frontmatter
+version: 1
+project:
+  id: 98639202-2740-46df-bbdf-48c6b1a3738d
+  title: PhD Thesis
+  # description:
+  keywords: []
+  authors:
+    - name: Mikkel Roald-Arbøl
+      orcid: 0000-0002-9998-0058
+      corresponding: true
+      email: m.roald-arbl@sussex.ac.uk
+      roles: null
+      affiliations:
+        - University of Sussex
+  github: https://github.com/roaldarbol/thesis-template
+  bibliography: []
+  exports:
+  - format: typst
+    template: typst-thesis.typ
+    toc: examples/example-myst/_toc.yml
+site:
+  template: book-theme
+  # title:
+  # options:
+  #   favicon: favicon.ico
+  #   logo: site_logo.png
+  nav: []
+  actions:
+    - title: Learn More
+      url: https://mystmd.org/guide
+  domains: []
