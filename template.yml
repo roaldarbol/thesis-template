@@ -34,10 +34,6 @@ doc:
   - id: keywords
   - id: doi
   - id: github
-options:
-  - id: conference-year
-    type: number
-    description: What year is the conference, for example, 2024
 parts:
   - id: abstract
     description: >
