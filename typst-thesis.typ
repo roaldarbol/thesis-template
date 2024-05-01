@@ -4,7 +4,7 @@
   set text(size: 8pt)
   set align(left)
   set par(justify: true)
-  text(weight: "bold")[#it.supplement #it.counter.display(it.numbering)]
+  text(weight: "bold")[it.supplement it.counter.display(it.numbering)]
   "."
   h(4pt)
   set text(fill: black.lighten(20%), style: "italic")
@@ -45,22 +45,22 @@
       counter(figure.where(kind: image)).update(0)
       counter(figure.where(kind: table)).update(0)
       counter(math.equation).update(0)
-      [#numbering("1.", ..nums)]
+      [numbering("1.", ..nums)]
     } else {
-      [#numbering("1.1.1", ..nums)]
+      [numbering("1.1.1", ..nums)]
     }
   })
 
   // Configure figure numbering
   set figure(numbering: (..args) => {
     let chapter = counter(heading).display((..nums) => nums.pos().at(0))
-    [#chapter.#numbering("1", ..args.pos())]
+    [chapter.numbering("1", ..args.pos())]
   })
 
   // Configure equation numbering and spacing.
   set math.equation(numbering: (..args) => {
     let chapter = counter(heading).display((..nums) => nums.pos().at(0))
-    [(#chapter.#numbering("1)", ..args.pos())]
+    [(chapter.numbering("1)", ..args.pos())]
   })
   show math.equation: set block(spacing: 1em)
   show figure.caption: leftCaption
