@@ -2,7 +2,7 @@ myst: v1
 kind: typst
 title: Thesis Template
 description: Typst-MyST Thesis Template
-template: typst-thesis.typ
+template: template.typ
 files:
   - template.typ
   - typst-thesis.typ
@@ -53,4 +53,3 @@ parts:
     required: false
   - id: glossary
     required: false
-
