@@ -13,27 +13,29 @@
 
 #let template(
   frontmatter: (),
-  // heading-numbering: "1.1.1",
+  heading-numbering: "1.1.1",
   // A color for the theme of the document
   theme: blue.darken(30%),
   // The thesis' content.
   body
 ) = {
 
-  // Load Front Matter
+  // === Load Front Matter === //
   let fm = pubmatter.load(frontmatter)
   let dates;
   if ("date" in fm and type(fm.date) == "datetime") {
     dates = ((title: "Published", date: fm.date),)
-  // } else if (type(date) == "dictionary") {
-  //   dates = (date,)
   } else {
     dates = date
   }
 
-  // Set document metadata.
-  set document(title: fm.title, author: fm.authors.map(author => author.name))
+  // === Set document metadata === //
+  set document(
+    title: fm.title, 
+    author: fm.authors.map(author => author.name)
+    )
 
+  // === Document Settings === //
   // Headings
   set heading(numbering: (..args) => {
     let nums = args.pos()
@@ -49,7 +51,7 @@
     }
   })
 
-
+  // Configure figure numbering
   set figure(numbering: (..args) => {
     let chapter = counter(heading).display((..nums) => nums.pos().at(0))
     [#chapter.#numbering("1", ..args.pos())]
@@ -69,6 +71,12 @@
   set list(indent: 10pt, body-indent: 9pt)
 
 
+
+  // --------------------------------------------- //
+  // ---------- Document Begins ------------------ //
+  // --------------------------------------------- //
+
+  // Title Page
   // Title and subtitle
   box(inset: (bottom: 2pt), text(17pt, weight: "bold", fill: theme, fm.title))
   if fm.subtitle != none {
@@ -76,7 +84,9 @@
     box(text(14pt, fill: gray.darken(30%), fm.subtitle))
   }
 
-  // Outline of book
+  // In here needs to go all the front matter pages
+
+  // Table of Content
   pagebreak()
   show outline.entry.where(level: 1): (it) => {
     v(12pt, weak: true)
@@ -84,7 +94,7 @@
   }
   outline(indent: auto)
 
-
+  // Configure chapter headings
   show heading.where(level: 1): (it) => {
     pagebreak()
     let chapter = counter(heading).display((..nums) => nums.pos().at(0))
