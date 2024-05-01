@@ -3,8 +3,10 @@ A typst template for creating a thesis using MyST Markdown.
 
 ## Development
 I use [pixi](https://pixi.sh) for managing the environment, so if you don't have pixi installed - do that first.
-- clone the repository
+- clone the repository and `cd` into it
 - run `pixi install`, which will install `typst` and `mystmd`.
+- run `pixi shell` to open a pixi shell (or prefix your commands with `pixi run`)
+  
 ### Typst
 To render the `typst` example, run:
 ```sh
