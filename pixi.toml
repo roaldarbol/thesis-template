@@ -7,7 +7,7 @@ channels = ["conda-forge"]
 platforms = ["osx-64"]
 
 [tasks]
-render-typst = "typst compile examples/examploe-typst/main.typ --root ../.."
+render-typst = "typst compile examples/example-typst/main.typ --root ../.."
 render-myst = "myst build --typst"
 
 [dependencies]
