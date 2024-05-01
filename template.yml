@@ -49,3 +49,12 @@ parts:
       Declaration that you did the work!
     max_words: 500
     required: true
+  - id: preface
+    required: true
+  - id: acknowledgements
+    required: true
+  - id: dedication
+    required: false
+  - id: glossary
+    required: false
+

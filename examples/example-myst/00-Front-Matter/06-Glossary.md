@@ -1,5 +1,5 @@
 # Glossary
-
++++ {"part": "glossary"}
 :::{glossary}
 Sleep
 : A process of behavioural quiescence and altered consciousness.
@@ -26,3 +26,4 @@ Pose estimation
 : Computer vision method tracking individual body parts.
 
 :::
++++
