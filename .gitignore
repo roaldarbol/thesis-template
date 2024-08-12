@@ -4,6 +4,7 @@ template.pdf
 .pixi
 *.egg-info
 _build
+*.DS_Store
 
 Exports
 

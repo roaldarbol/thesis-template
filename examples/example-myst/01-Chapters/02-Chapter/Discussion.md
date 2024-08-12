@@ -10,7 +10,6 @@ Determining active and passive metabolic rates in freely moving animals rely on 
 
 ### Brain states
 
-
 ## Critique of time as a proxy for sleep
 Thresholding is a procedure that makes presumptions. It assumes that... A low threshold will thus increase the number of Type I errors, whereas a high threshold will increase Type II errors. What needs to be recognised is that the fundamental assumption that sleep occurs after a pre-determined amount of time of immobility is flawed; the same amount of rigour that is employed
 
@@ -20,3 +19,15 @@ As sleep research has entered the mainstream, and high-throughput methods has al
 The hierarchical thresholding is an improvement over a single threshold. However, it is not perfect. Improvements could be including postural information, along with environmental information, such as where the animal places itself along an environmental gradient.
 
 Using a 3-state HMM to differentiate further between...
+
+:::{figure} https://placehold.co/600x400
+:label: ch-4-setup2
+
+This is a placeholder image. And this is the caption
+:::
+
+:::{figure} https://placehold.co/600x400
+:label: ch-4-setup22
+
+This is a placeholder image.
+:::

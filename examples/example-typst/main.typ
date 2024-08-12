@@ -44,8 +44,6 @@
 )
 
 /* Written by MyST v1.1.37 */
-#set page(columns: 1, margin: (x: 1.5cm, y: 2cm),)
-
 // Here it needs to create each of the front matter sections with the 
 
 = vak: a neural network framework for researchers studying animal acoustic communication

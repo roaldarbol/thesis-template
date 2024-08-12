@@ -34,6 +34,14 @@ doc:
   - id: keywords
   - id: doi
   - id: github
+options:
+  - id: line_spacing
+    type: number
+    default: 1.5
+    description: Line spacing in em
+  - id: logo
+    type: string
+    default: logo.svg
 parts:
   - id: abstract
     description: >
